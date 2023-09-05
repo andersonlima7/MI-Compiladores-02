@@ -1,0 +1,21 @@
+if_stmt := 'if' '(' rel_expr | log_expr | boolean ')' 'then' stmts [ "else" stmts ]
+
+rel_expr := val_expr rel_op val_expr
+
+log_expr := val_expr log_op val_expr | log_not
+
+digit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+
+letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z' 
+
+number := digit { digit } [ '.' digit { digit } ]
+
+rel_op := '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
+
+boolean := 'True' | 'False'
+
+log_op := '&&' | '||' 
+
+log_not := '!' val_expr  
+
+val_expr := // Here resides other expressions that becomes values, literals e etc...
