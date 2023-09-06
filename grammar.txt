@@ -23,7 +23,7 @@ log_expr := val_expr log_op val_expr | log_not
 
 # Comandos
 
-<for-command> ::= 'for' '(' <init-expression> ';' <cond-expression> ';' <loop-expression> ')'stmts
+<for-command> ::= 'for' '(' <expression> ';' <cond-expression> ';' {<expression>} ')'stmts
 <print-command> ::= "print" "(" <expression> ")" ";"
 <read-command> ::= "read" "(" <variable> ")" ";"
 
