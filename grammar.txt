@@ -54,7 +54,7 @@ letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
 # Definições de Classes
 
 <class ::= "class" <id> "{" <class-content> "}"
-<class-content> ::= <methods> <constructor>
+<class-content> ::= <methods> <constructor> <variable_declaration_block>
 
 
 # Definições de Classes
