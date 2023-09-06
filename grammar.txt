@@ -49,3 +49,23 @@ value = number | string_literal | boolean | array
 type = "int" | "real" | "string" | "boolean" {"[" digit "]"}
 digit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
+
+
+# Definições de Classes
+
+<class ::= "class" <id> "{" <class-content> "}"
+<class-content> ::= <methods> <constructor>
+
+
+# Definições de Classes
+
+<methods> ::= "methods"  "{" <method-list> "}"
+<method-list> ::= <method> | <method> <method-list>
+<method> ::= "void" | <type> <id> "(" <parameters> ")" "{" <method-content> "}"
+<method-content> ::= <statement>*
+<parameters> ::= <param> | <param> "," <parameters> | 
+<param> ::= <type> <id>
+<statement> ::= "return" <value> ";"
+<constructor> ::= "constructor" "(" <parameters> ")" "{" <constructor-content> "}"
+<constructor-content> ::= <assignment>*
+<assignment> ::= "this" "." <id> "=" <id> ";"
