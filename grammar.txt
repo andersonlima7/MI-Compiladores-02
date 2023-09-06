@@ -1,32 +1,50 @@
+# Definições de Variáveis e Constantes
+
+variable_declaration_block = "variables" "{" variable_list "}"
+variable_list = variable_declaration {";" variable_declaration}
+variable_declaration = type id {"," id} ["=" value]
+
+constant_declaration_block = "const" "{" constant_list "}"
+constant_list = constant_declaration {";" constant_declaration}
+constant_declaration = type id "=" value {"," id "=" value}
+
+# Definição de Objetos
+
+objects_declaration_block = "objects" "{" object_list "}"
+object_list = object_declaration {";" object_declaration}
+object_declaration = id id "=" "constructor(" parameter_list ")" {"," id "=" "constructor(" parameter_list ")"}
+parameter_list = value {"," value}
+
+# Expressões Condicionais e Relacionais
+
 if_stmt := 'if' '(' rel_expr | log_expr | boolean ')' 'then' stmts [ "else" stmts ]
-
 rel_expr := val_expr rel_op val_expr
-
 log_expr := val_expr log_op val_expr | log_not
 
-digit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-
-letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z' 
-
-number := digit { digit } [ '.' digit { digit } ]
-
-rel_op := '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
-
-boolean := 'True' | 'False'
-
-log_op := '&&' | '||' 
-
-log_not := '!' val_expr  
+# Comandos
 
 <print-command> ::= "print" "(" <expression> ")" ";"
-
 <read-command> ::= "read" "(" <variable> ")" ";"
 
+# Expressões
+
 <expression> ::= <string> | <variable> | <number> | <boolean> | <method-call>
-
 <method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")"
-
 <argument-list> ::= <expression> | <expression> "," <expression>
+val_expr := // Aqui residem outras expressões que se tornam valores, literais, etc.
 
-val_expr := // Here resides other expressions that becomes values, literals e etc...
 
+# Estrutura léxica da linguagem
+
+id = letter {letter | digit | "_"};  # valid identifier
+string_literal = '"'{letter | digit | symbol}'"'
+number := digit { digit } [ '.' digit { digit } ]
+rel_op := '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
+boolean := 'True' | 'False'
+log_op := '&&' | '||'
+log_not := '!' val_expr
+array = "["[value {","value}]"]"
+value = number | string_literal | boolean | array 
+type = "int" | "real" | "string" | "boolean" {"[" digit "]"}
+digit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
