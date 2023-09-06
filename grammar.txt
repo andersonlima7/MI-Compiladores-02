@@ -23,6 +23,7 @@ log_expr := val_expr log_op val_expr | log_not
 
 # Comandos
 
+<for-command> ::= 'for' '(' <init-expression> ';' <cond-expression> ';' <loop-expression> ')'stmts
 <print-command> ::= "print" "(" <expression> ")" ";"
 <read-command> ::= "read" "(" <variable> ")" ";"
 
@@ -32,7 +33,7 @@ log_expr := val_expr log_op val_expr | log_not
 <method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")"
 <argument-list> ::= <expression> | <expression> "," <expression>
 val_expr := // Aqui residem outras expressões que se tornam valores, literais, etc.
-
+<cond-expression> :=  <rel_expr> | <log_expr> | <boolean>
 
 # Estrutura léxica da linguagem
 
