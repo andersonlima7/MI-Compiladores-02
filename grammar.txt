@@ -18,4 +18,15 @@ log_op := '&&' | '||'
 
 log_not := '!' val_expr  
 
+<print-command> ::= "print" "(" <expression> ")" ";"
+
+<read-command> ::= "read" "(" <variable> ")" ";"
+
+<expression> ::= <string> | <variable> | <number> | <boolean> | <method-call>
+
+<method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")"
+
+<argument-list> ::= <expression> | <expression> "," <expression>
+
 val_expr := // Here resides other expressions that becomes values, literals e etc...
+
