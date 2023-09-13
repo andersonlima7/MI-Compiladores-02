@@ -1,3 +1,10 @@
+<program> ::= <block>
+<block> ::= <unlabelled-block> | <label> <block>
+<unlabelled-block> ::= <block-head> "{" <block-tail> "}"
+<block-head> ::= <declaration> | <block-head> ";" <declaration> 
+<block-tail> ::= <statement> | <statement> ";" <block-tail>
+<declaration> ::= <type-declaration> | <array-declaration>
+
 program = {constant_declaration_block} {variable_declaration_block} {class} {objects_declaration_block} main_class 
 
 main_class = "class" "main" "{" main_class_content "};"
@@ -22,9 +29,23 @@ parameter_list = value {"," value}
 
 # Expressões Condicionais e Relacionais
 
-if_stmt := 'if' '(' rel_expr | log_expr | boolean ')' 'then' stmts [ "else" stmts ]
-rel_expr := val_expr rel_op val_expr
+rel_expr := val_expr <relational operator> val_expr
 log_expr := val_expr log_op val_expr | log_not
+
+<boolean-expression> ::= <if-clause> <boolean-term>  "else" <boolean-expression>
+<boolean-term> ::= <boolean-factor> | <boolean-term> "||" <boolean-factor>
+<boolean-factor> ::= <boolean-secondary> | <boolean-factor> "&&" <boolean-secondary>
+<boolean-secondary> ::= <boolean-primary> | "!" <boolean-primary>
+<boolean-primary> ::= <boolean> | <variable> | "(" <boolean-expression> ")"
+<conditional-statement> ::= <if-statement> | <if-statement> "else" <statement> | <if-clause> | <label> <conditional-statement>
+<if-statement> ::= <if-clause> <unconditional-statement>
+<if-clause> ::= "if" <boolean-expression> "then"
+<unconditional-statement> ::= <basic-statement> | <block>
+<basic-statement> ::= <unlabelled-basic-statement> | <label> <basic-statement> 
+<unlabelled-basic-statement> ::= <assignment-statement>
+<unsigned-integer> ::= <digit> | <unsigned-integer> <digit>
+<statement> ::= <unconditional-statement> | <conditional-statement> | <for-command>
+<label> ::= <id> | <unsigned-integer>
 
 # Comandos
 
@@ -46,7 +67,7 @@ val_expr := // Aqui residem outras expressões que se tornam valores, literais, 
 id = letter {letter | digit | "_"};  # valid identifier
 string_literal = '"'{letter | digit | symbol}'"'
 number := digit { digit } [ '.' digit { digit } ]
-rel_op := '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
+<relational operator> ::= '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
 boolean := 'True' | 'False'
 log_op := '&&' | '||'
 log_not := '!' val_expr
