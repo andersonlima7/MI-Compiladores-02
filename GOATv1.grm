@@ -1,0 +1,98 @@
+﻿"Name"     = 'GOAT'
+"Author"   = 'Enter your name'
+"Version"  = 'The version of the grammar and/or language'
+"About"    = 'A short description of the grammar'
+
+"Start Symbol" = <Program>
+
+! -------------------------------------------------
+! Character Sets
+! -------------------------------------------------
+
+{String Chars} = {Printable} + {HT} - ["\]
+{Digit9} = {Digit} - [0] ! Digit já vem no GOLD
+
+! -------------------------------------------------
+! Terminals
+! -------------------------------------------------
+
+INT = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
+BOOL = 'true' | 'false'
+Identifier    = {Letter}{AlphaNumeric}*
+StringLiteral = '"' ( {String Chars} | '\' {Printable} )* '"'
+Type = 'int' | 'string' | 'boolean' | 'real'
+! -------------------------------------------------
+! Rules
+! -------------------------------------------------
+
+! The grammar starts below
+
+<Variable> ::= Identifier | INT | BOOL | StringLiteral
+
+<Parameter-List> ::= <Variable>
+                  | <Variable> ',' <Parameter-List>
+                  |
+
+<Method-Call> ::= Identifier '(' <Parameter-List> ')'
+
+<Primary-Expression> ::= Identifier
+                      | INT
+                      | BOOL
+                      | StringLiteral
+                      | <Method-Call>
+
+<Access-Expression> ::= <Primary-Expression>
+                     | <Access-Expression> '->' <Primary-Expression>
+                     | <Access-Expression> '.' <Primary-Expression>
+                     | <Access-Expression> '[' <Primary-Expression> ']'
+
+<Unary-Expression> ::= <Access-Expression>                    
+                    | <Access-Expression> '++'
+                    | <Access-Expression> '--'
+
+<Multiplicative-Expression> ::= <Unary-Expression>
+                             | <Multiplicative-Expression> '*' <Unary-Expression>
+                             | <Multiplicative-Expression> '/' <Unary-Expression>
+
+<Additive-Expression> ::= <Multiplicative-Expression>
+                       | <Additive-Expression> '+' <Multiplicative-Expression>
+                       | <Additive-Expression> '-' <Multiplicative-Expression>
+
+<Relational-Expression> ::= <Additive-Expression>
+                         | <Relational-Expression> '<' <Additive-Expression>
+                         | <Relational-Expression> '>' <Additive-Expression>
+                         | <Relational-Expression> '<=' <Additive-Expression>
+                         | <Relational-Expression> '>=' <Additive-Expression>
+
+<Equality-Expression> ::= <Relational-Expression>
+                       | <Equality-Expression> '!=' <Relational-Expression>
+                       | <Equality-Expression> '==' <Relational-Expression>
+
+<Logical-Not-Expression> ::= <Equality-Expression>
+                          | '!' <Logical-Not-Expression>
+
+<Logical-Or-Expression> ::= <Logical-Not-Expression>
+                         | <Logical-Or-Expression> '||' <Logical-Not-Expression>
+                         | '(' <Logical-Or-Expression> ')'
+
+<Logical-And-Expression> ::= <Logical-Or-Expression>
+                          | <Logical-And-Expression> '&&' <Logical-Or-Expression>
+                          | '(' <Logical-And-Expression> ')'
+
+<Identifier-List> ::= Identifier
+                   | Identifier ',' <Identifier-List>
+
+<Declaration-Expression> ::= Type <Identifier-List> !int a
+
+<Assignment-Expression> ::= Type Identifier '=' <Logical-And-Expression>
+                         | Identifier '=' <Logical-And-Expression>
+
+<Expression> ::= <Declaration-Expression>
+              | <Assignment-Expression>
+
+<Program> ::= <Expression> !<Var Block>? <Object Block>? <Main>?
+
+!Add more values to the rule below - as needed
+
+<Value>       ::= Identifier
+               |  '(' <Expression> ')'
