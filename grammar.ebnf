@@ -35,7 +35,7 @@ parameter_list = id ["." id] | value {"," id ["." id] | value}
 
 # Comandos
 commands = for_command | print-command | read_command | assignment_command | method_call
-assignment_command = id "=" (id ["." id] | value)
+assignment_command = id ["." id]"=" (id ["." id] | value)
 for_command = "for(" cond-expression {log_op cond-expression} ") {" {commands} "};" 
 print_command = "print("id ["." id] | value");"
 read_command = "read" "(" id ["." id] ");"

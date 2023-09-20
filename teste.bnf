@@ -44,7 +44,7 @@ constant_declaration ::= <type> <id> "=" <id> | <value> {"," <id> "=" <id>| <val
 
 
 # --------------------- Expressões relacionais e lógicas ---------------------
-<expression> ::= <relational_expression> | <logical_expression> | value | <id>
+<expression> ::= <relational_expression> | <logical_expression> | <id>
 <relational_expression> ::= <expression> <relacional_option>
 <relacional_option> ::= "==" <expression> | "!=" <expression> | "<" <expression> | ">" <expression> | "<=" <expression> | ">=" <expression>
 <logical_expression> ::= <expression> <logical_option> | "!" <expression>
@@ -53,7 +53,7 @@ constant_declaration ::= <type> <id> "=" <id> | <value> {"," <id> "=" <id>| <val
 <commands> ::= { <command> }
 <command> ::= <if_statement> | <for_statement> | <print_command> | <read_command> | <assignment> | <method_call>
 
-<if_statement> ::= "if" "(" <expression> ")" "{" <commands> "}" ["else" "{" <commands> "}"]
+<if_statement> ::= "if (" <expression> ") then" "{" <commands> "}" ["else" "{" <commands> "}"]
 <for_statement> ::= "for" "(" <expression> ")" "{" <commands> "}"
 <print_command> ::= "print" "(" <expression> ")" ";"
 <read_command> ::= "read" "(" <id> | <id> '.' <id> ")" ";"

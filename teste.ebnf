@@ -46,13 +46,24 @@ parameter_list = id | value {"," id | value}
 
 # --------------------- Expressões relacionais e lógicas ---------------------
 expression = relational_expression | logical_expression | value | id
-relational_expression = expression "==" expression | expression "!=" expression | expression "<" expression | expression ">" expression | expression "<=" expression | expression ">=" expression
+relational_expression = expression rel expression
 logical_expression = expression "&&" expression | expression "||" expression | "!" expression
 
 commands = { command }
 command = if_statement | for_statement | print_command | read_command | assignment | method_call
 
 if_statement = "if" "(" expression ")" "{" commands "}" ["else" "{" commands "}"]
-for_statement = "for" "(" expression ")" "{" commands "}"
+# Refazer o for, seguindo a lógica de for padrão EX for(int i = 0; i < 10; i++)
+
+for_statement = "for" "(" variable_declaration ";" relational_expression ";" arit_incremment ")" "{" commands "}"
 print_command = "print" "(" expression ")" ";"
 read_command = "read" "(" id | id '.' id ")" ";" 
+
+
+
+
+# --------------------- Expressões aritméticos  (Guilherme) ---------------------
+
+
+
+
