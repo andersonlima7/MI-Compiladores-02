@@ -1,57 +1,59 @@
-program ::= [constant_declaration_block] [variable_declaration_block] [class] [objects_declaration_block] main_class 
+<program> ::= [<constant_declaration_block>] [<variable_declaration_block>] [<class>] [<objects_declaration_block>] <main_class> 
 
-main_class ::= "class" "main" "{" main_class_content "};"
-main_class_content ::= [variable_declaration_block] [objects_declaration_block] {commands}
+<main_class> ::= "class" "main" "{" <main_class_content> "};"
+<main_class_content> ::= [<variable_declaration_block>] [<objects_declaration_block>] {<commands>}
 
 
 
 # --------------------- Definições de Variáveis e Constantes ---------------------
-variable_declaration_block ::= "variables" "{" variable_list "};"
-variable_list ::= variable_declaration {";" variable_declaration}
-variable_declaration ::= type id ["=" id | value] {"," id ["=" id | value]}
+<variable_declaration_block> ::= "variables" "{" <variable_list> "};"
+<variable_list> ::= <variable_declaration> {";" <variable_declaration>}
+<variable_declaration> ::= <type> <id> ["=" <id> | <value>] {"," <id> ["=" <id> | <value>]}
 
-constant_declaration_block ::= "const" "{" constant_list "};"
+<constant_declaration_block> ::= "const" "{" constant_list "};"
 constant_list ::= constant_declaration {";" constant_declaration}
-constant_declaration ::= type id "=" id | value {"," id "=" id| value}
+constant_declaration ::= <type> <id> "=" <id> | <value> {"," <id> "=" <id>| <value>}
 
 
 
 # --------------------- Definições de Classes e Métodos ---------------------
-class ::= "class" id ["extends" id] "{"  class_content  "}"
-class_content ::= methods  constructor  variable_declaration_block
+<class> ::= "class" <id> ["extends" <id>] "{"  <class_content>  "}"
+<class_content> ::= <methods>  <constructor>  <variable_declaration_block>
 
-methods ::= "methods"  "{"  method_list  "}"
-method_list ::= method  { method }
-method ::= "void" | type  id  "("  parameters  ")"  "{"  method_content  "}"
-method_content ::= { statement }
-parameters ::= param  { "," param }
-param ::= type  id
-statement ::= "return"  value  ";"
-constructor ::= "constructor"  "("  parameters  ")"  "{"  constructor_content  "}"
-constructor_content ::= { assignment }
-assignment ::= "this"  "."  id assignment_end;
-assignment_end ::= ["=" assignment_value] ";"
-assignment_value ::= id | value
+<methods> ::= "methods"  "{"  <method_list>  "}"
+<method_list> ::= <method>  { <method> }
+<method> ::= "void" | <type>  <id>  "("  <parameters>  ")"  "{"  <method_content>  "}"
+<method_content> ::= { <statement> }
+<parameters> ::= <param>  { "," <param> }
+<param> ::= <type>  <id>
+<statement> ::= "return"  <value>  ";"
+<constructor> ::= "constructor"  "("  <parameters>  ")"  "{"  <constructor_content>  "}"
+<constructor_content> ::= { <assignment> }
+<assignment> ::= "this"  "."  <id> <assignment_end>;
+<assignment_end> ::= ["=" <assignment_value>] ";"
+<assignment_value> ::= <id> | <value>
 
 
 
 # --------------------- Definição de Objetos ---------------------
-objects_declaration_block ::= "objects" "{" object_list "};"
-object_list ::= object_declaration {";" object_declaration}
-object_declaration ::= id id "=" "constructor(" parameter_list ")" {"," id "=" "constructor(" parameter_list ")"}
-parameter_list ::= id | value {"," id | value}
+<objects_declaration_block> ::= "objects" "{" <object_list> "};"
+<object_list> ::= <object_declaration> {";" <object_declaration>}
+<object_declaration> ::= <id> <id> "=" "constructor(" <parameter_list> ")" {"," <id> "=" "constructor(" <parameter_list> ")"}
+<parameter_list> ::= <id> | <value> {"," <id> | <value>}
 
 
 
 # --------------------- Expressões relacionais e lógicas ---------------------
-expression ::= relational_expression | logical_expression | value | id
-relational_expression ::= expression "==" expression | expression "!=" expression | expression "<" expression | expression ">" expression | expression "<=" expression | expression ">=" expression
-logical_expression ::= expression "&&" expression | expression "||" expression | "!" expression
+<expression> ::= <relational_expression> | <logical_expression> | value | <id>
+<relational_expression> ::= <expression> <relacional_option>
+<relacional_option> ::= "==" <expression> | "!=" <expression> | "<" <expression> | ">" <expression> | "<=" <expression> | ">=" <expression>
+<logical_expression> ::= <expression> <logical_option> | "!" <expression>
+<logical_option> ::= "&&" <expression> | "||" <expression>
 
-commands ::= { command }
-command ::= if_statement | for_statement | print_command | read_command | assignment | method_call
+<commands> ::= { <command> }
+<command> ::= <if_statement> | <for_statement> | <print_command> | <read_command> | <assignment> | <method_call>
 
-if_statement ::= "if" "(" expression ")" "{" commands "}" ["else" "{" commands "}"]
-for_statement ::= "for" "(" expression ")" "{" commands "}"
-print_command ::= "print" "(" expression ")" ";"
-read_command ::= "read" "(" id | id '.' id ")" ";"
+<if_statement> ::= "if" "(" <expression> ")" "{" <commands> "}" ["else" "{" <commands> "}"]
+<for_statement> ::= "for" "(" <expression> ")" "{" <commands> "}"
+<print_command> ::= "print" "(" <expression> ")" ";"
+<read_command> ::= "read" "(" <id> | <id> '.' <id> ")" ";"
