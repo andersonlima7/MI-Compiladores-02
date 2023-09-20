@@ -12,10 +12,11 @@
 IDE  = {Letter}({Letter}|{Digit}|'_')*
 INT = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
 DEC = INT ('.'{Digit}+)?
-CAC = '"' ({Letter}|{Digit})* '"'
+CAC = '"' ({Letter}|{Digit}|Symbol)* '"'
 REL = '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
 LOG = '&&' | '||'
 Boolean = 'true' | 'false'
+Symbol = {#32..#33} | {#35..#126}
         
 !-----------------------Rules
 
