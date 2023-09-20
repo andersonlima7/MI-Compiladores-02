@@ -1,4 +1,4 @@
-"Name"     = 'GOAT'
+﻿"Name"     = 'GOAT'
 "Author"   = 'Enter your name'
 "Version"  = 'The version of the grammar and/or language'
 "About"    = 'A short description of the grammar'
@@ -16,30 +16,46 @@
 ! Terminals
 ! -------------------------------------------------
 
-INT = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
+NUM = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
 BOOL = 'true' | 'false'
 
-Identifier    = {Letter}{AlphaNumeric}*
-StringLiteral = '"' ( {String Chars} | '\' {Printable} )* '"'
-Type = 'int' | 'string' | 'boolean' | 'real'
+IDE    = {Letter}{AlphaNumeric}*
+STR = '"' ( {String Chars} | '\' {Printable} )* '"'
+TYPE = 'int' | 'string' | 'boolean' | 'real'
 ! -------------------------------------------------
 ! Rules
 ! -------------------------------------------------
 
 ! The grammar starts below
+! ------Add array
+<Value> ::= NUM | STR | BOOL
+<Object-Value> ::= | '.' IDE
+<Assignment-Value> ::= IDE <Object-Value> | <Value>
 
-<Variable> ::= Identifier | INT | BOOL | StringLiteral
+         
+! --------------------- Definições de Variáveis e Constantes ---------------------
 
-<Parameter-List> ::= <Variable>
-                  | <Variable> ',' <Parameter-List>
+<Variable-Block> ::= | 'variables' '{' <Variable> '};'
+<Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
+<Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
+<Optional-Value> ::= | '=' <Assignment-Value>
+
+
+<Constant-Block> ::= | 'const' '{' <Constant> '};'
+<Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
+<Constant-Same-Line> ::= | ',' IDE '=' <Assignment-Value> <Constant-Same-Line>
+                    
+
+<Parameter-List> ::= <Assignment-Value>
+                  | <Assignment-Value> ',' <Parameter-List>
                   |
 
-<Method-Call> ::= Identifier '(' <Parameter-List> ')'
+<Method-Call> ::= IDE '(' <Parameter-List> ')'
 
-<Primary-Expression> ::= Identifier
-                      | INT
+<Primary-Expression> ::= IDE
+                      | NUM
                       | BOOL
-                      | StringLiteral
+                      | STR
                       | <Method-Call>
 
 <Access-Expression> ::= <Primary-Expression>
@@ -80,13 +96,13 @@ Type = 'int' | 'string' | 'boolean' | 'real'
                           | <Logical-And-Expression> '&&' <Logical-Or-Expression>
                           | '(' <Logical-And-Expression> ')'
 
-<Identifier-List> ::= Identifier
-                   | Identifier ',' <Identifier-List>
+<IDE-List> ::= IDE
+                   | IDE ',' <IDE-List>
 
-<Declaration-Expression> ::= Type <Identifier-List> !int a
+<Declaration-Expression> ::= TYPE <IDE-List> !int a
 
-<Assignment-Expression> ::= Type Identifier '=' <Logical-And-Expression>
-                         | Identifier '=' <Logical-And-Expression>
+<Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression>
+                         | IDE '=' <Logical-And-Expression>
 
 <Expression> ::= <Declaration-Expression>
               | <Assignment-Expression>
@@ -111,9 +127,4 @@ Type = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Const-Block> 
-
-!Add more values to the rule below - as needed
-
-<Value>       ::= Identifier
-               |  '(' <Expression> ')'
+<Program> ::= <Constant-Block> 
