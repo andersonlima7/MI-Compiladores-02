@@ -43,12 +43,12 @@ log_expr := val_expr log_op val_expr | log_not
 <label> ::= <id> | <unsigned-integer>
 
 # Comandos
-# Falta atribuição, chamada de metodo, funcao
-commands = for-command | print-command | read-command
-<for-command> ::= 'for' '(' <expression> ';' <cond-expression> ';' {<expression>} ')'stmts
-<print-command> ::= "print" "(" value ")" ";"
-<read-command> ::= "read" "(" <variable> ")" ";"
-<method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")" ";"
+commands = for_command | print-command | read_command | assignment_command | method_call
+assignment_command = id "=" (id ["." id] | value)
+for_command = "for(" cond-expression {log_op cond-expression} ") {" {commands} "};" 
+print_command = "print("id ["." id] | value");"
+read_command = "read" "(" id ["." id] ");"
+method_call = id "->" id "(" parameter_list ");"
 
 # Expressões
 
