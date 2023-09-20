@@ -22,25 +22,16 @@ parameter_list = id ["." id] | value {"," id ["." id] | value}
 
 # Expressões Condicionais e Relacionais
 
-# Refatorar o comando If (Anesio)
+<cmd_if> ::= if '(' <rel_expr> | <log_expr> ')' then <cmd_if>
+              | if '(' <rel_expr> | <log_expr> ')'then <cmd_then> else <cmd_if>
 
-rel_expr := val_expr <relational operator> val_expr
-log_expr := val_expr log_op val_expr | log_not
+<cmd_then>  ::= if '(' <rel_expr> | <log_expr> ')' then <cmd_then> else <cmd_then>
 
-<boolean-expression> ::= <if-clause> <boolean-term>  "else" <boolean-expression>
-<boolean-term> ::= <boolean-factor> | <boolean-term> "||" <boolean-factor>
-<boolean-factor> ::= <boolean-secondary> | <boolean-factor> "&&" <boolean-secondary>
-<boolean-secondary> ::= <boolean-primary> | "!" <boolean-primary>
-<boolean-primary> ::= <boolean> | <variable> | "(" <boolean-expression> ")"
-<conditional-statement> ::= <if-statement> | <if-statement> "else" <statement> | <if-clause> | <label> <conditional-statement>
-<if-statement> ::= <if-clause> <unconditional-statement>
-<if-clause> ::= "if" <boolean-expression> "then"
-<unconditional-statement> ::= <basic-statement> | <block>
-<basic-statement> ::= <unlabelled-basic-statement> | <label> <basic-statement> 
-<unlabelled-basic-statement> ::= <assignment-statement>
-<unsigned-integer> ::= <digit> | <unsigned-integer> <digit>
-<statement> ::= <unconditional-statement> | <conditional-statement> | <for-command>
-<label> ::= <id> | <unsigned-integer>
+<rel_expr> ::= <val_expr> LOG <val_expr>
+<log_expr> ::= <val_expr> LOG <val_expr> | <log_not>
+<log_not> ::= '!' <val_expr>
+<val_expr> ::=  IDE | NRO | CAC | boolean 
+
 
 # Comandos
 commands = for_command | print-command | read_command | assignment_command | method_call
@@ -54,7 +45,8 @@ method_call = id "->" id "(" parameter_list ");"
 
 <expression> ::= <string> | <variable> | <number> | <boolean> # | <method-call>
 <argument-list> ::= <expression> | <expression> "," <expression>
-val_expr := // Aqui residem outras expressões que se tornam valores, literais, etc.
+
+
 <cond-expression> :=  <rel_expr> | <log_expr> | <boolean>
 
 # Estrutura léxica da linguagem
