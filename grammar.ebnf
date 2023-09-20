@@ -1,33 +1,28 @@
-<program> ::= <block>
-<block> ::= <unlabelled-block> | <label> <block>
-<unlabelled-block> ::= <block-head> "{" <block-tail> "}"
-<block-head> ::= <declaration> | <block-head> ";" <declaration> 
-<block-tail> ::= <statement> | <statement> ";" <block-tail>
-<declaration> ::= <type-declaration> | <array-declaration>
-
-program = {constant_declaration_block} {variable_declaration_block} {class} {objects_declaration_block} main_class 
+program = [constant_declaration_block] [variable_declaration_block] [class] [objects_declaration_block] main_class 
 
 main_class = "class" "main" "{" main_class_content "};"
-main_class_content = {variable_declaration_block} {objects_declaration_block} {commands} 
+main_class_content = [variable_declaration_block] [objects_declaration_block]{commands} 
 
 # Definições de Variáveis e Constantes
 
 variable_declaration_block = "variables" "{" variable_list "};"
 variable_list = variable_declaration {";" variable_declaration}
-variable_declaration = type id ["=" value] {"," id ["=" value]}
+variable_declaration = type id ["=" id | value] {"," id ["=" id | value]}
 
 constant_declaration_block = "const" "{" constant_list "};"
 constant_list = constant_declaration {";" constant_declaration}
-constant_declaration = type id "=" value {"," id "=" value}
+constant_declaration = type id "=" id | value {"," id "=" id| value}
 
 # Definição de Objetos
 
 objects_declaration_block = "objects" "{" object_list "};"
 object_list = object_declaration {";" object_declaration}
 object_declaration = id id "=" "constructor(" parameter_list ")" {"," id "=" "constructor(" parameter_list ")"}
-parameter_list = value {"," value}
+parameter_list = id | value {"," id | value}
 
 # Expressões Condicionais e Relacionais
+
+# Refatorar o comando If (Anesio)
 
 rel_expr := val_expr <relational operator> val_expr
 log_expr := val_expr log_op val_expr | log_not
@@ -48,16 +43,16 @@ log_expr := val_expr log_op val_expr | log_not
 <label> ::= <id> | <unsigned-integer>
 
 # Comandos
-
-commands = for-command | print_command | read_command
+# Falta atribuição, chamada de metodo, funcao
+commands = for-command | print-command | read-command
 <for-command> ::= 'for' '(' <expression> ';' <cond-expression> ';' {<expression>} ')'stmts
-<print-command> ::= "print" "(" <expression> ")" ";"
+<print-command> ::= "print" "(" value ")" ";"
 <read-command> ::= "read" "(" <variable> ")" ";"
+<method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")" ";"
 
 # Expressões
 
-<expression> ::= <string> | <variable> | <number> | <boolean> | <method-call>
-<method-call> ::= <identifier> "->" <identifier> "(" <argument-list> ")"
+<expression> ::= <string> | <variable> | <number> | <boolean> # | <method-call>
 <argument-list> ::= <expression> | <expression> "," <expression>
 val_expr := // Aqui residem outras expressões que se tornam valores, literais, etc.
 <cond-expression> :=  <rel_expr> | <log_expr> | <boolean>
@@ -68,7 +63,7 @@ id = letter {letter | digit | "_"};  # valid identifier
 string_literal = '"'{letter | digit | symbol}'"'
 number := digit { digit } [ '.' digit { digit } ]
 <relational operator> ::= '!=' | '==' | '<' | '<=' | '>' | '>=' | '='
-boolean := 'True' | 'False'
+boolean := 'true' | 'false'
 log_op := '&&' | '||'
 log_not := '!' val_expr
 array = "["[value {","value}]"]"
@@ -80,22 +75,23 @@ letter := 'a'| 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
 
 # Definições de Classes
 
-class = "class" , id , "{" , class-content , "}"
-class-content = methods , constructor , variable_declaration_block
+# Falta o extends
+class = "class" id ["extends" id]"{"  class-content  "}"
+class-content = methods  constructor  variable_declaration_block
 
 # Definições de Métodos
 
-methods = "methods" , "{" , method-list , "}"
-method-list = method , { method }
-method = "void" | type , id , "(" , parameters , ")" , "{" , method-content , "}"
+methods = "methods"  "{"  method-list  "}"
+method-list = method  { method }
+method = "void" | type  id  "("  parameters  ")"  "{"  method-content  "}"
 method-content = { statement }
-parameters = param , { "," , param }
-param = type , id
-statement = "return" , value , ";"
-constructor = "constructor" , "(" , parameters , ")" , "{" , constructor-content , "}"
+parameters = param  { "," , param }
+param = type  id
+statement = "return"  value  ";"
+constructor = "constructor"  "("  parameters  ")"  "{"  constructor-content  "}"
 constructor-content = { assignment }
-assignment = "this" , "." , id, assignment-end;
-assignment-end = ["=", assignment-value], ";"
+assignment = "this"  "."  id assignment-end;
+assignment-end = ["=" assignment-value] ";"
 assignment-value = id | value
 
 
