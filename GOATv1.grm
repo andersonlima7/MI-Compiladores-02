@@ -34,13 +34,28 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
 <Assignment-Value-List> ::= ',' <Parameter-List> |
 
-         
+
+! --------------------- Definições de Classes e Métodos ---------------------
+<Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}'
+               <Class-Extends> ::= 'extends' IDE |
+<Class-Content> ::= <Methods> <Constructor> <Variable-Block>
+
+<Methods> ::= 'methods' '{' <Method> '}' |
+<Method> ::= <Method-Type> IDE '(' <Parameter-List> ')' '{' <Method-Content> '}' <Method> |
+<Method-Type> ::= 'void' | TYPE  
+<Method-Content> ::= <Return-Value>
+
+<Return-Value> ::= 'return' <Value> ';' |
+
+<Constructor> ::= 'constructor' '(' <Parameter-List> ')' '{' <Assignment-Method> '}' |       
+<Assignment-Method> ::= 'this.' IDE <Optional-Value> ';' <Assignment-Method> |
+<Optional-Value> ::= '=' <Assignment-Value> |                  
+
+
 ! --------------------- Definições de Variáveis e Constantes ---------------------
 <Variable-Block> ::= | 'variables' '{' <Variable> '};'
 <Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
 <Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
-<Optional-Value> ::= | '=' <Assignment-Value>
-
 
 <Constant-Block> ::= | 'const' '{' <Constant> '};'
 <Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
@@ -108,4 +123,4 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Const-Block> 
+<Program> ::= <Class-Block> 
