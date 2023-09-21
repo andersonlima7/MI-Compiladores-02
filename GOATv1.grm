@@ -12,15 +12,19 @@
 {String Chars} = {Printable} + {HT} - ["\]
 {Digit9} = {Digit} - [0] ! Digit já vem no GOLD
 
+
 ! -------------------------------------------------
 ! Terminals
 ! -------------------------------------------------
 
 NUM = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
 BOOL = 'true' | 'false'
-IDE    = {Letter}{AlphaNumeric}*
+IDE    = {Letter}({Letter}|{Digit}|'_')*
 STR = '"' ( {String Chars} | '\' {Printable} )* '"'
-TYPE = 'int' | 'string' | 'boolean' | 'real'
+TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' | 'real') ('[' {Digit}+ ']')*
+
+
+     
 ! -------------------------------------------------
 ! Rules
 ! -------------------------------------------------
@@ -128,3 +132,4 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
 <Program> ::= <Constant-Block> 
+
