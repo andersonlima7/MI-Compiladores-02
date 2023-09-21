@@ -31,6 +31,10 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <Value> ::= NUM | STR | BOOL
 <Object-Value> ::= | '.' IDE
 <Assignment-Value> ::= IDE <Object-Value> | <Value>
+<Parameter-List> ::= <Assignment-Value>
+                  | <Assignment-Value> ',' <Parameter-List>
+                  |
+                    
 
          
 ! --------------------- Definições de Variáveis e Constantes ---------------------
@@ -46,9 +50,11 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <Constant-Same-Line> ::= | ',' IDE '=' <Assignment-Value> <Constant-Same-Line>
                     
 
-<Parameter-List> ::= <Assignment-Value>
-                  | <Assignment-Value> ',' <Parameter-List>
-                  |
+
+! --------------------- Definições de Objetos ---------------------
+<Object-Block> ::= | 'objects' '{' <Object> '};'
+<Object> ::= | IDE IDE '=' 'constructor' '(' <Parameter-List> ')' <Object-Same-Line> ';' <Object>
+<Object-Same-Line> ::= | ',' IDE '=' 'constructor' '(' <Parameter-List> ')'
 
 <Method-Call> ::= IDE '(' <Parameter-List> ')'
 
@@ -127,4 +133,4 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Constant-Block> 
+<Program> ::= <Object-Block> 
