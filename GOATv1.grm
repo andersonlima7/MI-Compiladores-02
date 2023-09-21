@@ -18,7 +18,6 @@
 
 NUM = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
 BOOL = 'true' | 'false'
-
 IDE    = {Letter}{AlphaNumeric}*
 STR = '"' ( {String Chars} | '\' {Printable} )* '"'
 TYPE = 'int' | 'string' | 'boolean' | 'real'
@@ -27,10 +26,13 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 ! -------------------------------------------------
 
 ! The grammar starts below
-! ------Add array
 <Value> ::= NUM | STR | BOOL
 <Object-Value> ::= | '.' IDE
-<Assignment-Value> ::= IDE <Object-Value> | <Value>
+<Possible-Value> ::= | IDE <Object-Value> | <Value>
+<Array-Value> ::= <Possible-Value> | <Array>
+<More-Array-Value> ::= | ',' <Array-Value> <More-Array-Value>
+<Array> ::= '[' <Array-Value> <More-Array-Value> ']'
+<Assignment-Value> ::= IDE <Object-Value> | <Value> | <Array>
 <Parameter-List> ::= <Assignment-Value>
                   | <Assignment-Value> ',' <Parameter-List>
                   |
@@ -39,20 +41,20 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
          
 ! --------------------- Definições de Variáveis e Constantes ---------------------
 
-<Variable-Block> ::= | 'variables' '{' <Variable> '};'
+<Variable-Block> ::= | 'variables' '{' <Variable> '}'
 <Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
 <Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
 <Optional-Value> ::= | '=' <Assignment-Value>
 
 
-<Constant-Block> ::= | 'const' '{' <Constant> '};'
+<Constant-Block> ::= | 'const' '{' <Constant> '}'
 <Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
 <Constant-Same-Line> ::= | ',' IDE '=' <Assignment-Value> <Constant-Same-Line>
                     
 
 
 ! --------------------- Definições de Objetos ---------------------
-<Object-Block> ::= | 'objects' '{' <Object> '};'
+<Object-Block> ::= | 'objects' '{' <Object> '}'
 <Object> ::= | IDE IDE '=' 'constructor' '(' <Parameter-List> ')' <Object-Same-Line> ';' <Object>
 <Object-Same-Line> ::= | ',' IDE '=' 'constructor' '(' <Parameter-List> ')'
 
@@ -133,4 +135,7 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Object-Block> 
+<Program> ::= <Constant-Block> 
+
+
+
