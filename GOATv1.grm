@@ -32,20 +32,34 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <Array-Value> ::= <Possible-Value> | <Array>
 <More-Array-Value> ::= | ',' <Array-Value> <More-Array-Value>
 <Array> ::= '[' <Array-Value> <More-Array-Value> ']'
-<Assignment-Value> ::= IDE <Object-Value> | <Value> | <Array>
-<Parameter-List> ::= <Assignment-Value>
-                  | <Assignment-Value> ',' <Parameter-List>
-                  |
                     
+<Assignment-Value> ::= IDE <Object-Value> | <Value>                  
+<Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
+<Assignment-Value-List> ::= ',' <Parameter-List> |
 
-         
+
+! --------------------- Definições de Classes e Métodos ---------------------
+<Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}'
+               <Class-Extends> ::= 'extends' IDE |
+<Class-Content> ::= <Methods> <Constructor> <Variable-Block>
+
+<Methods> ::= 'methods' '{' <Method> '}' |
+<Method> ::= <Method-Type> IDE '(' <Parameter-List> ')' '{' <Method-Content> '}' <Method> |
+<Method-Type> ::= 'void' | TYPE  
+<Method-Content> ::= <Return-Value>
+
+<Return-Value> ::= 'return' <Value> ';' |
+
+<Constructor> ::= 'constructor' '(' <Parameter-List> ')' '{' <Assignment-Method> '}' |       
+<Assignment-Method> ::= 'this.' IDE <Optional-Value> ';' <Assignment-Method> |
+<Optional-Value> ::= '=' <Assignment-Value> |                  
+
+
 ! --------------------- Definições de Variáveis e Constantes ---------------------
 
 <Variable-Block> ::= | 'variables' '{' <Variable> '}'
 <Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
 <Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
-<Optional-Value> ::= | '=' <Assignment-Value>
-
 
 <Constant-Block> ::= | 'const' '{' <Constant> '}'
 <Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
@@ -60,82 +74,57 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Method-Call> ::= IDE '(' <Parameter-List> ')'
 
-<Primary-Expression> ::= IDE
-                      | NUM
-                      | BOOL
-                      | STR
-                      | <Method-Call>
+<Primary-Expression> ::= IDE | NUM | BOOL | STR | <Method-Call>
 
-<Access-Expression> ::= <Primary-Expression>
-                     | <Access-Expression> '->' <Primary-Expression>
-                     | <Access-Expression> '.' <Primary-Expression>
-                     | <Access-Expression> '[' <Primary-Expression> ']'
+<Access-Expression> ::= <Primary-Expression> | <Access-Expression-List>
+<Access-Expression-List> ::= '->' <Primary-Expression> | '.' <Primary-Expression> | '[' <Primary-Expression> ']' |
 
-<Unary-Expression> ::= <Access-Expression>                    
-                    | <Access-Expression> '++'
-                    | <Access-Expression> '--'
+<Unary-Expression> ::= <Access-Expression> <Unary-Expression-List>
+<Unary-Expression-List> ::=  '++' | '--' |
 
-<Multiplicative-Expression> ::= <Unary-Expression>
-                             | <Multiplicative-Expression> '*' <Unary-Expression>
-                             | <Multiplicative-Expression> '/' <Unary-Expression>
+<Multiplicative-Expression> ::= <Unary-Expression> <Multiplicative-Expression-List> 
+<Multiplicative-Expression-List> ::= '*' <Unary-Expression> | '/' <Unary-Expression> |
 
-<Additive-Expression> ::= <Multiplicative-Expression>
-                       | <Additive-Expression> '+' <Multiplicative-Expression>
-                       | <Additive-Expression> '-' <Multiplicative-Expression>
+<Additive-Expression> ::= <Multiplicative-Expression> | <Additive-Expression-List> 
+<Additive-Expression-List> ::= '+' <Multiplicative-Expression> | '-' <Multiplicative-Expression>
 
-<Relational-Expression> ::= <Additive-Expression>
-                         | <Relational-Expression> '<' <Additive-Expression>
-                         | <Relational-Expression> '>' <Additive-Expression>
-                         | <Relational-Expression> '<=' <Additive-Expression>
-                         | <Relational-Expression> '>=' <Additive-Expression>
+<Relational-Expression> ::= <Additive-Expression> <Relational-Expression-List> 
+<Relational-Expression-List> ::= | '<' <Additive-Expression> | '>' <Additive-Expression>
+                                 | '<=' <Additive-Expression> | '>=' <Additive-Expression> |
 
-<Equality-Expression> ::= <Relational-Expression>
-                       | <Equality-Expression> '!=' <Relational-Expression>
-                       | <Equality-Expression> '==' <Relational-Expression>
+<Equality-Expression> ::= <Relational-Expression> <Equality-Expression-List> 
+<Equality-Expression-List> ::= '!=' <Relational-Expression> | '==' <Relational-Expression> |
 
-<Logical-Not-Expression> ::= <Equality-Expression>
-                          | '!' <Logical-Not-Expression>
+<Logical-Not-Expression> ::= <Equality-Expression> | '!' <Logical-Not-Expression>
 
 <Logical-Or-Expression> ::= <Logical-Not-Expression>
-                         | <Logical-Or-Expression> '||' <Logical-Not-Expression>
-                         | '(' <Logical-Or-Expression> ')'
+                        | <Logical-Or-Expression> '||' <Logical-Not-Expression>
+                        | '(' <Logical-Or-Expression> ')'
 
 <Logical-And-Expression> ::= <Logical-Or-Expression>
                           | <Logical-And-Expression> '&&' <Logical-Or-Expression>
                           | '(' <Logical-And-Expression> ')'
 
-<IDE-List> ::= IDE
-                   | IDE ',' <IDE-List>
+<IDE-List> ::= IDE | IDE ',' <IDE-List>
 
-<Declaration-Expression> ::= TYPE <IDE-List> !int a
+<Declaration-Expression> ::= TYPE <IDE-List>
 
-<Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression>
-                         | IDE '=' <Logical-And-Expression>
-
-<Expression> ::= <Declaration-Expression>
-              | <Assignment-Expression>
-
-
-<Expression-Sequence> ::= <Expression> ';'
-                       | <Expression-Sequence> <Expression> ';'
+<Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression> | IDE '=' <Logical-And-Expression>
+<Expression> ::= <Declaration-Expression> | <Assignment-Expression>
+<Expression-Sequence> ::= <Expression> ';' | <Expression-Sequence> <Expression> ';'
 
 <Condition> ::= '(' <Logical-And-Expression> ')'
              
-<Else-Statement> ::= 'else' '{' <Statement-Sequence> '}'
-                  |
+<Else-Statement> ::= 'else' '{' <Statement-Sequence> '}' |
 
 <If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
 
 <Statement> ::= <If-Statement> 
 
-<Statement-Sequence> ::= <Statement>
-                      | <Statement> '{' <Statement> '}'
-                      | <Statement-Sequence> <Statement>
-                      | <Expression-Sequence>
+<Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
+                      | <Statement-Sequence> <Statement> | <Expression-Sequence>
+<Statement-Sequence-List> ::= '{' <Statement> '}' |
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Constant-Block> 
-
-
-
+<Program> ::= <Class-Block> 
