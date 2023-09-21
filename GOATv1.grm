@@ -18,7 +18,6 @@
 
 NUM = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
 BOOL = 'true' | 'false'
-
 IDE    = {Letter}{AlphaNumeric}*
 STR = '"' ( {String Chars} | '\' {Printable} )* '"'
 TYPE = 'int' | 'string' | 'boolean' | 'real'
@@ -27,29 +26,49 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 ! -------------------------------------------------
 
 ! The grammar starts below
-! ------Add array
 <Value> ::= NUM | STR | BOOL
 <Object-Value> ::= | '.' IDE
-<Assignment-Value> ::= IDE <Object-Value> | <Value>                  
+<Possible-Value> ::= | IDE <Object-Value> | <Value>
+<Array-Value> ::= <Possible-Value> | <Array>
+<More-Array-Value> ::= | ',' <Array-Value> <More-Array-Value>
+<Array> ::= '[' <Array-Value> <More-Array-Value> ']'
+                    
+<Assignment-Value> ::= IDE <Object-Value> | <Value> | <Array>                 
 <Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
 <Assignment-Value-List> ::= ',' <Parameter-List> |
 
-         
+
+! --------------------- Definições de Classes e Métodos ---------------------
+<Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}'
+               <Class-Extends> ::= 'extends' IDE |
+<Class-Content> ::= <Methods> <Constructor> <Variable-Block>
+
+<Methods> ::= 'methods' '{' <Method> '}' |
+<Method> ::= <Method-Type> IDE '(' <Parameter-List> ')' '{' <Method-Content> '}' <Method> |
+<Method-Type> ::= 'void' | TYPE  
+<Method-Content> ::= <Return-Value>
+
+<Return-Value> ::= 'return' <Value> ';' |
+
+<Constructor> ::= 'constructor' '(' <Parameter-List> ')' '{' <Assignment-Method> '}' |       
+<Assignment-Method> ::= 'this.' IDE <Optional-Value> ';' <Assignment-Method> |
+<Optional-Value> ::= '=' <Assignment-Value> |                  
+
+
 ! --------------------- Definições de Variáveis e Constantes ---------------------
-<Variable-Block> ::= | 'variables' '{' <Variable> '};'
+
+<Variable-Block> ::= | 'variables' '{' <Variable> '}'
 <Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
 <Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
-<Optional-Value> ::= | '=' <Assignment-Value>
 
-
-<Constant-Block> ::= | 'const' '{' <Constant> '};'
+<Constant-Block> ::= | 'const' '{' <Constant> '}'
 <Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
 <Constant-Same-Line> ::= | ',' IDE '=' <Assignment-Value> <Constant-Same-Line>
                     
 
 
 ! --------------------- Definições de Objetos ---------------------
-<Object-Block> ::= | 'objects' '{' <Object> '};'
+<Object-Block> ::= | 'objects' '{' <Object> '}'
 <Object> ::= | IDE IDE '=' 'constructor' '(' <Parameter-List> ')' <Object-Same-Line> ';' <Object>
 <Object-Same-Line> ::= | ',' IDE '=' 'constructor' '(' <Parameter-List> ')'
 
@@ -111,4 +130,4 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Const-Block> 
+<Program> ::= <Constant-Block> 

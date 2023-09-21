@@ -46,8 +46,7 @@ parameter_list = id | value {"," id | value}
 
 # --------------------- Expressões relacionais e lógicas ---------------------
 expression = relational_expression | logical_expression | value | id
-
-relational_expression = (id | value) rel (id | value)
+relational_expression = expression rel expression
 logical_expression = expression "&&" expression | expression "||" expression | "!" expression
 
 commands = { command }
@@ -56,7 +55,7 @@ command = if_statement | for_statement | print_command | read_command | assignme
 if_statement = "if" "(" expression ")" "{" commands "}" ["else" "{" commands "}"]
 # Refazer o for, seguindo a lógica de for padrão EX for(int i = 0; i < 10; i++)
 
-for_statement = "for" "(" variable_declaration ";" relational_expression ";" arit_increment ")" "{" commands "}"
+for_statement = "for" "(" variable_declaration ";" relational_expression ";" arit_incremment ")" "{" commands "}"
 print_command = "print" "(" expression ")" ";"
 read_command = "read" "(" id | id '.' id ")" ";" 
 
