@@ -1,0 +1,111 @@
+"Name"     = 'GOAT'
+"Author"   = 'Enter your name'
+"Version"  = 'The version of the grammar and/or language'
+"About"    = 'A short description of the grammar'
+
+"Start Symbol" = <Program>
+
+! -------------------------------------------------
+! Character Sets
+! -------------------------------------------------
+
+{String Chars} = {Printable} + {HT} - ["\]
+{Digit9} = {Digit} - [0] ! Digit já vem no GOLD
+
+! -------------------------------------------------
+! Terminals
+! -------------------------------------------------
+
+NUM = ('0'|{Digit9}{Digit}*)('.'{Digit}+)?
+BOOL = 'true' | 'false'
+
+IDE    = {Letter}{AlphaNumeric}*
+STR = '"' ( {String Chars} | '\' {Printable} )* '"'
+TYPE = 'int' | 'string' | 'boolean' | 'real'
+! -------------------------------------------------
+! Rules
+! -------------------------------------------------
+
+! The grammar starts below
+! ------Add array
+<Value> ::= NUM | STR | BOOL
+<Object-Value> ::= | '.' IDE
+<Assignment-Value> ::= IDE <Object-Value> | <Value>                  
+<Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
+<Assignment-Value-List> ::= ',' <Parameter-List> |
+
+         
+! --------------------- Definições de Variáveis e Constantes ---------------------
+<Variable-Block> ::= | 'variables' '{' <Variable> '};'
+<Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
+<Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
+<Optional-Value> ::= | '=' <Assignment-Value>
+
+
+<Constant-Block> ::= | 'const' '{' <Constant> '};'
+<Constant> ::= | TYPE IDE '=' <Assignment-Value>  <Constant-Same-Line> ';' <Constant> 
+<Constant-Same-Line> ::= | ',' IDE '=' <Assignment-Value> <Constant-Same-Line>
+                    
+
+
+! --------------------- Definições de Objetos ---------------------
+<Object-Block> ::= | 'objects' '{' <Object> '};'
+<Object> ::= | IDE IDE '=' 'constructor' '(' <Parameter-List> ')' <Object-Same-Line> ';' <Object>
+<Object-Same-Line> ::= | ',' IDE '=' 'constructor' '(' <Parameter-List> ')'
+
+<Method-Call> ::= IDE '(' <Parameter-List> ')'
+
+<Primary-Expression> ::= IDE | NUM | BOOL | STR | <Method-Call>
+
+<Access-Expression> ::= <Primary-Expression> | <Access-Expression-List>
+<Access-Expression-List> ::= '->' <Primary-Expression> | '.' <Primary-Expression> | '[' <Primary-Expression> ']' |
+
+<Unary-Expression> ::= <Access-Expression> <Unary-Expression-List>
+<Unary-Expression-List> ::=  '++' | '--' |
+
+<Multiplicative-Expression> ::= <Unary-Expression> <Multiplicative-Expression-List> 
+<Multiplicative-Expression-List> ::= '*' <Unary-Expression> | '/' <Unary-Expression> |
+
+<Additive-Expression> ::= <Multiplicative-Expression> | <Additive-Expression-List> 
+<Additive-Expression-List> ::= '+' <Multiplicative-Expression> | '-' <Multiplicative-Expression> |
+
+<Relational-Expression> ::= <Additive-Expression> <Relational-Expression-List> 
+<Relational-Expression-List> ::= | '<' <Additive-Expression> | '>' <Additive-Expression>
+                                 | '<=' <Additive-Expression> | '>=' <Additive-Expression> |
+
+<Equality-Expression> ::= <Relational-Expression> <Equality-Expression-List> 
+<Equality-Expression-List> ::= '!=' <Relational-Expression> | '==' <Relational-Expression> |
+
+<Logical-Not-Expression> ::= <Equality-Expression> | '!' <Logical-Not-Expression>
+
+<Logical-Or-Expression> ::= <Logical-Not-Expression>
+                        | <Logical-Or-Expression> '||' <Logical-Not-Expression>
+                        | '(' <Logical-Or-Expression> ')'
+
+<Logical-And-Expression> ::= <Logical-Or-Expression>
+                          | <Logical-And-Expression> '&&' <Logical-Or-Expression>
+                          | '(' <Logical-And-Expression> ')'
+
+<IDE-List> ::= IDE | IDE ',' <IDE-List>
+
+<Declaration-Expression> ::= TYPE <IDE-List>
+
+<Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression> | IDE '=' <Logical-And-Expression>
+<Expression> ::= <Declaration-Expression> | <Assignment-Expression>
+<Expression-Sequence> ::= <Expression> ';' | <Expression-Sequence> <Expression> ';'
+
+<Condition> ::= '(' <Logical-And-Expression> ')'
+             
+<Else-Statement> ::= 'else' '{' <Statement-Sequence> '}' |
+
+<If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
+
+<Statement> ::= <If-Statement> 
+
+<Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
+                      | <Statement-Sequence> <Statement> | <Expression-Sequence>
+<Statement-Sequence-List> ::= '{' <Statement> '}' |
+
+<Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
+
+<Program> ::= <Const-Block> 
