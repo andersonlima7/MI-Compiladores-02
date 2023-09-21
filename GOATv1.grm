@@ -33,7 +33,7 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 <More-Array-Value> ::= | ',' <Array-Value> <More-Array-Value>
 <Array> ::= '[' <Array-Value> <More-Array-Value> ']'
                     
-<Assignment-Value> ::= IDE <Object-Value> | <Value>                  
+<Assignment-Value> ::= IDE <Object-Value> | <Value> | <Array>                 
 <Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
 <Assignment-Value-List> ::= ',' <Parameter-List> |
 
@@ -127,4 +127,4 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
 
-<Program> ::= <Class-Block> 
+<Program> ::= <Constant-Block> 
