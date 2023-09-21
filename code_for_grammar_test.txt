@@ -1,0 +1,7 @@
+const {
+    for(int i=0,j,k; i < MAX; i++){
+        if(i==5)then{
+            i=4;
+        }
+    }
+}
