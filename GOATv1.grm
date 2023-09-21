@@ -100,7 +100,10 @@ TYPE = 'int' | 'string' | 'boolean' | 'real'
 
 <If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
 
-<Statement> ::= <If-Statement> 
+<Statement> ::= <If-Statement> | <For-Statement>
+
+!--- Será que precisa colocar os campos como opcionais?
+<For-Statement> ::= 'for' '(' <Variable> <Logical-And-Expression>';' <Unary-Expression> ')' <Statement-Sequence-List>
 
 <Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
                       | <Statement-Sequence> <Statement> | <Expression-Sequence>
