@@ -124,8 +124,8 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 
 <Expression> ::= <Declaration-Expression> | <Assignment-Expression>
               
-<Expression-Sequence> ::= <Expression> ';' | <Expression> ';' <Expression-Sequence> 
-                       
+<Expression-Sequence> ::= <Expression> ';' <Expression-Sequence-List>
+<Expression-Sequence-List> ::= <Expression-Sequence> |          
 !<Expression-Sequence> ::= <Expression>  <Expression-Sequence> ';' |
 
 <Condition> ::= '(' <Logical-And-Expression> ')'
@@ -142,14 +142,12 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <Statement> ::= <If-Statement> | <For-Statement> | 'pass'
              
 <Command> ::= <Print-Command> | <Read-Command>
-!<Statement-Sequence> ::= <Statement> <Statement-Sequence> | <Expression-Sequence> <Statement-Sequence> |
+
 
 <Statement-Sequence> ::= <Statement> <Statement-Sequence>
                       | <Command> <Statement-Sequence>
                       | <Expression-Sequence> <Statement-Sequence>
                       |
                       
-<Statement-Sequence-List> ::= '{' <Statement> '}' |    
-
 ! ------------------------------- Definicao do programa principal -------------------------------
 <Program> ::= <Constant-Block> <Variable-Block> <Class-Block> <Object-Block> <Main-Class>
