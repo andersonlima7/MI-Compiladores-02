@@ -1,7 +1,7 @@
-﻿"Name"     = 'GOAT'
-           "Author"   = 'Enter your name'
-"Version"  = 'The version of the grammar and/or language'
-"About"    = 'A short description of the grammar'
+﻿"Name"     = 'gOat'
+"Author"   = 'Anésio, Anderson, Guilherme, Ozenilson, Tiago'
+"Version"  = 'V1'
+"About"    = 'Gramática para a disciplina de Mi-Compiladores'
 
 "Start Symbol" = <Program>
 
