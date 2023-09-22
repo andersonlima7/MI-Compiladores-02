@@ -1,7 +1,7 @@
-﻿"Name"     = 'gOat'
-"Author"   = 'Anésio, Anderson, Guilherme, Ozenilson, Tiago'
-"Version"  = 'V1'
-"About"    = 'Gramática para a disciplina de Mi-Compiladores'
+"Name"     = 'GOAT'
+"Author"   = 'Enter your name'
+"Version"  = 'The version of the grammar and/or language'
+"About"    = 'A short description of the grammar'
 
 "Start Symbol" = <Program>
 
@@ -48,7 +48,7 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 
 ! --------------------- Definições de Classes e Métodos ---------------------
 <Main-Class> ::= 'class' 'main' '{' <Main-Class-Content> '}'
-<Main-Class-Content> ::= <Variable-Block> <Object-Block> <Statement>
+<Main-Class-Content> ::= <Variable-Block> <Object-Block> <Statement-Sequence>
 
 <Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}' <Class-Block> |
 <Class-Extends> ::= 'extends' IDE |
@@ -56,8 +56,8 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <Class-Content> ::= <Variable-Block> <Constructor>  <Methods> 
 
 <Methods> ::= 'methods' '{' <Method> '}' |
-<Method> ::= TYPE IDE '(' <Parameter> ')' '{' <Statement> 'return' <Value> ';' '}' <Method> 
-          |  'void' IDE '(' <Parameter> ')' '{' <Statement> '}' <Method> 
+<Method> ::= TYPE IDE '(' <Parameter> ')' '{' <Statement-Sequence> 'return' <Value> ';' '}' <Method> 
+          |  'void' IDE '(' <Parameter> ')' '{' <Statement-Sequence> '}' <Method> 
           |
 
 <Constructor> ::= 'constructor' '(' <Parameter> ')' '{' <Assignment-Method> '}' |       
@@ -98,6 +98,7 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <Additive-Expression-List> ::= '+' <Multiplicative-Expression> | '-' <Multiplicative-Expression>
 
 <Relational-Expression> ::= <Additive-Expression> <Relational-Expression-List> 
+
 <Relational-Expression-List> ::= | '<' <Additive-Expression> | '>' <Additive-Expression>
                                  | '<=' <Additive-Expression> | '>=' <Additive-Expression> |
 
@@ -120,8 +121,11 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <Declaration-Expression> ::= TYPE <IDE-List>
 
 <Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression> | IDE '=' <Logical-And-Expression>
+
 <Expression> ::= <Declaration-Expression> | <Assignment-Expression>
-<Expression-Sequence> ::= <Expression> ';' | <Expression-Sequence> <Expression> ';'
+              
+<Expression-Sequence> ::= <Expression> ';' | <Expression> ';' <Expression-Sequence> 
+                       
 !<Expression-Sequence> ::= <Expression>  <Expression-Sequence> ';' |
 
 <Condition> ::= '(' <Logical-And-Expression> ')'
@@ -129,18 +133,22 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
 <Else-Statement> ::= 'else' '{' <Statement-Sequence> '}' |
 
-<For-Statement> ::= 'for' '(' <Variable> <Logical-And-Expression>';' <Unary-Expression> ')' <Statement-Sequence-List>
+<For-Statement> ::= 'for' '(' <Variable> <Logical-And-Expression>';' <Unary-Expression> ')' '{' <Statement-Sequence> '}'
 
-<Print-Statement> ::= 'print' '(' <Possible-Value> ')' ';' 
+<Print-Command> ::= 'print' '(' <Possible-Value> ')' ';' 
 
-<Read-Statement> ::= 'read' '(' IDE <Object-Value> ')' ';'
+<Read-Command> ::= 'read' '(' IDE <Object-Value> ')' ';'
                   
-
-<Statement> ::= <If-Statement> | <For-Statement> | <Print-Statement> | <Read-Statement> |
+<Statement> ::= <If-Statement> | <For-Statement> | 'pass'
+             
+<Command> ::= <Print-Command> | <Read-Command>
 !<Statement-Sequence> ::= <Statement> <Statement-Sequence> | <Expression-Sequence> <Statement-Sequence> |
 
-<Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
-                      | <Statement-Sequence> <Statement> | <Expression-Sequence>
+<Statement-Sequence> ::= <Statement> <Statement-Sequence>
+                      | <Command> <Statement-Sequence>
+                      | <Expression-Sequence> <Statement-Sequence>
+                      |
+                      
 <Statement-Sequence-List> ::= '{' <Statement> '}' |    
 
 ! ------------------------------- Definicao do programa principal -------------------------------
