@@ -1,5 +1,5 @@
 ﻿"Name"     = 'GOAT'
-"Author"   = 'Enter your name'
+           "Author"   = 'Enter your name'
 "Version"  = 'The version of the grammar and/or language'
 "About"    = 'A short description of the grammar'
 
@@ -38,29 +38,34 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 <Array> ::= '[' <Array-Value> <More-Array-Value> ']'
                     
 <Assignment-Value> ::= IDE <Object-Value> | <Value> | <Array>                 
-<Parameter-List> ::= <Assignment-Value> <Assignment-Value-List> |
-<Assignment-Value-List> ::= ',' <Parameter-List> |
+<Args-List> ::= <Assignment-Value> <Assignment-Value-List> |
+<Assignment-Value-List> ::= ',' <Args-List> |
+                         
 
+<Parameter> ::= IDE <Parameter-Value-List> |
+<Parameter-Value-List> ::= ',' <Parameter> |
+                        
 
 ! --------------------- Definições de Classes e Métodos ---------------------
-<Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}'
-               <Class-Extends> ::= 'extends' IDE |
-<Class-Content> ::= <Methods> <Constructor> <Variable-Block>
+<Main-Class> ::= 'class' 'main' '{' <Main-Class-Content> '}'
+<Main-Class-Content> ::= <Variable-Block> <Object-Block> <Statement>
+
+<Class-Block> ::= 'class' IDE <Class-Extends> '{' <Class-Content> '}' <Class-Block> |
+<Class-Extends> ::= 'extends' IDE |
+                                
+<Class-Content> ::= <Variable-Block> <Constructor>  <Methods> 
 
 <Methods> ::= 'methods' '{' <Method> '}' |
-<Method> ::= <Method-Type> IDE '(' <Parameter-List> ')' '{' <Method-Content> '}' <Method> |
-<Method-Type> ::= 'void' | TYPE  
-<Method-Content> ::= <Return-Value>
+<Method> ::= TYPE IDE '(' <Parameter> ')' '{' <Statement> 'return' <Value> ';' '}' <Method> 
+          |  'void' IDE '(' <Parameter> ')' '{' <Statement> '}' <Method> 
+          |
 
-<Return-Value> ::= 'return' <Value> ';' |
-
-<Constructor> ::= 'constructor' '(' <Parameter-List> ')' '{' <Assignment-Method> '}' |       
+<Constructor> ::= 'constructor' '(' <Parameter> ')' '{' <Assignment-Method> '}' |       
 <Assignment-Method> ::= 'this.' IDE <Optional-Value> ';' <Assignment-Method> |
 <Optional-Value> ::= '=' <Assignment-Value> |                  
 
 
 ! --------------------- Definições de Variáveis e Constantes ---------------------
-
 <Variable-Block> ::= | 'variables' '{' <Variable> '}'
 <Variable> ::= | TYPE IDE <Optional-Value> <Variable-Same-Line> ';' <Variable> 
 <Variable-Same-Line> ::= | ',' IDE <Optional-Value> <Variable-Same-Line>
@@ -73,10 +78,10 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 
 ! --------------------- Definições de Objetos ---------------------
 <Object-Block> ::= | 'objects' '{' <Object> '}'
-<Object> ::= | IDE IDE '=' 'constructor' '(' <Parameter-List> ')' <Object-Same-Line> ';' <Object>
-<Object-Same-Line> ::= | ',' IDE '=' 'constructor' '(' <Parameter-List> ')'
+<Object> ::= | IDE IDE '=' IDE '->' 'constructor' '(' <Args-List> ')' <Object-Same-Line> ';' <Object>
+<Object-Same-Line> ::= | ',' IDE '=' IDE '->' 'constructor' '(' <Args-List> ')'
 
-<Method-Call> ::= IDE '(' <Parameter-List> ')'
+<Method-Call> ::= IDE '(' <Args-List> ')'
 
 <Primary-Expression> ::= IDE | NUM | BOOL | STR | <Method-Call>
 
@@ -123,16 +128,20 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
 
 <If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
 
-<Statement> ::= <If-Statement> | <For-Statement>
+<Statement> ::= <If-Statement> | <For-Statement> | <Print-Statement> | <Read-Statement> |
 
-!--- Será que precisa colocar os campos como opcionais?
 <For-Statement> ::= 'for' '(' <Variable> <Logical-And-Expression>';' <Unary-Expression> ')' <Statement-Sequence-List>
+
+<Print-Statement> ::= 'print' '(' <Possible-Value> ')' ';' 
+
+<Read-Statement> ::= 'read' '(' IDE <Object-Value> ')' ';'
 
 <Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
                       | <Statement-Sequence> <Statement> | <Expression-Sequence>
 <Statement-Sequence-List> ::= '{' <Statement> '}' |
 
 <Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
+               
 
-<Program> ::= <Constant-Block> 
-
+! ------------------------------- Definicao do programa principal -------------------------------
+<Program> ::= <Constant-Block> <Variable-Block> <Class-Block> <Object-Block> <Main-Class>
