@@ -56,4 +56,6 @@ class main {
             i=10;
         }
     }
+    print("teste");
+    read(a);
 }

@@ -114,34 +114,34 @@ TYPE = ('int' | 'string' | 'boolean' | 'real') | ('int' | 'string' | 'boolean' |
                           | <Logical-And-Expression> '&&' <Logical-Or-Expression>
                           | '(' <Logical-And-Expression> ')'
 
-<IDE-List> ::= IDE | IDE ',' <IDE-List>
+<IDE-List> ::= IDE <IDE-Lis-List>
+<IDE-Lis-List>  ::= ',' <IDE-List> |
 
 <Declaration-Expression> ::= TYPE <IDE-List>
 
 <Assignment-Expression> ::= TYPE IDE '=' <Logical-And-Expression> | IDE '=' <Logical-And-Expression>
 <Expression> ::= <Declaration-Expression> | <Assignment-Expression>
 <Expression-Sequence> ::= <Expression> ';' | <Expression-Sequence> <Expression> ';'
+!<Expression-Sequence> ::= <Expression>  <Expression-Sequence> ';' |
 
 <Condition> ::= '(' <Logical-And-Expression> ')'
              
-<Else-Statement> ::= 'else' '{' <Statement-Sequence> '}' |
-
 <If-Statement> ::= 'if' <Condition> 'then' '{' <Statement-Sequence> '}' <Else-Statement>
-
-<Statement> ::= <If-Statement> | <For-Statement> | <Print-Statement> | <Read-Statement> |
+<Else-Statement> ::= 'else' '{' <Statement-Sequence> '}' |
 
 <For-Statement> ::= 'for' '(' <Variable> <Logical-And-Expression>';' <Unary-Expression> ')' <Statement-Sequence-List>
 
 <Print-Statement> ::= 'print' '(' <Possible-Value> ')' ';' 
 
 <Read-Statement> ::= 'read' '(' IDE <Object-Value> ')' ';'
+                  
+
+<Statement> ::= <If-Statement> | <For-Statement> | <Print-Statement> | <Read-Statement> |
+!<Statement-Sequence> ::= <Statement> <Statement-Sequence> | <Expression-Sequence> <Statement-Sequence> |
 
 <Statement-Sequence> ::= <Statement> <Statement-Sequence-List>
                       | <Statement-Sequence> <Statement> | <Expression-Sequence>
-<Statement-Sequence-List> ::= '{' <Statement> '}' |
-
-<Const-Block> ::= 'const' '{' <Statement-Sequence> '}'
-               
+<Statement-Sequence-List> ::= '{' <Statement> '}' |    
 
 ! ------------------------------- Definicao do programa principal -------------------------------
 <Program> ::= <Constant-Block> <Variable-Block> <Class-Block> <Object-Block> <Main-Class>
